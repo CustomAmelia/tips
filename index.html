@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Submit a Tip</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+<style>
+body {
+  background-color: #f2f2f2;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+form {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  text-align: left;
+  width: 400px;
+}
+
+h1 {
+  color: #333;
+  font-size: 36px;
+  margin-top: 0;
+}
+
+label {
+  color: #333;
+  display: block;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+input[type="text"] {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 16px;
+  padding: 10px;
+  width: 90%;
+}
+
+input[type="submit"] {
+  background-color: #333;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 26px;
+  padding: 10px 30px;
+}
+
+input[type="submit"]:hover {
+  background-color: #555;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <form id="tip-form">
+    <h1>Submit a Tip</h1>
+    <label for="reported-person">Person Report Name:</label>
+    <input type="text" id="reported-person" name="reported-person"><br><br>
+    <label for="reason">Reason:</label>
+    <input type="text" id="reason" name="reason" required><br><br>
+    <label for="evidence">Evidence:</label>
+    <input type="text" id="evidence" name="evidence" required><br><br>
+    <label for="video">Video:</label>
+    <input type="text" id="video" name="video"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+<script>
+  const form = document.getElementById('tip-form');
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const reportedPerson = form.elements['reported-person'].value || 'None';
+    const reason = form.elements.reason.value;
+    const evidence = form.elements.evidence.value;
+    const video = form.elements.video.value || 'None';
+
+    if (!reason || !evidence) {
+      Swal.fire({
+        title: 'Incomplete Form',
+        text: 'Please fill in all required fields.',
+        icon: 'warning'
+      });
+      return;
+    }
+
+    const data = {
+      "username": "Tips Website",
+      "embeds": [
+        {
+          "title": "Tip Submission",
+          "color": 3447003, // Blue color
+          "author": {
+            "name": "Tips Website",
+            "icon_url": "https://example.com/author-image.png" // Replace with your author image URL
+          },
+          "fields": [
+            {
+              "name": "Person Report Name",
+              "value": reportedPerson,
+              "inline": true
+            },
+            {
+              "name": "Reason",
+              "value": reason,
+              "inline": true
+            },
+            {
+              "name": "Evidence",
+              "value": evidence,
+              "inline": true
+            },
+            {
+              "name": "Video",
+              "value": video,
+              "inline": true
+            }
+          ]
+        }
+      ]
+    };
+
+    const response = await fetch('https://discord.com/api/webhooks/1117128096710135888/SvQevSbH5gQe6JAH4CogJQEVviA0xkLlcWEpAZpjHQ78zaac1iEHBluOA1K82UTmlw0D', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      Swal.fire({
+        title: 'Success!',
+        text: 'Tip submitted successfully!',
+        icon: 'success'
+      }).then(() => {
+        form.reset();
+      });
+    } else {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Error submitting tip. Please try again later.',
+        icon: 'error'
+      });
+    }
+  });
+</script>
+</body>
+</html>
